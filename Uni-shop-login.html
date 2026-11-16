@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — CHMSU Online School Store</title>
+  <style>
+    :root {
+      --chmsu-green: #115437;
+      --chmsu-green-dark: #0b3b26;
+      --chmsu-green-light: #1a6d48;
+      --chmsu-gold: #f4c430;
+      --bg-light: #f3f6f4;
+      --white: #ffffff;
+      --text-dark: #1b2621;
+      --text-muted: #5c6b64;
+      --border: #dce4e0;
+      --danger: #c93b3b;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background-color: var(--bg-light); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .top-bar {
+      background-color: var(--chmsu-green); color: var(--white); padding: 14px 28px;
+      display: flex; align-items: center; gap: 14px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .seal-badge {
+      width: 44px; height: 44px; border-radius: 50%; background: var(--white);
+      border: 2px solid var(--chmsu-gold); display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 11px; color: var(--chmsu-green); text-align: center; line-height: 1.1;
+    }
+    .brand-title h1 { margin: 0; font-size: 15px; font-weight: 700; text-transform: uppercase; }
+    .brand-title p { margin: 2px 0 0; font-size: 13px; color: #d4e8de; }
+
+        .main-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .login-container {
+      width: 100%; max-width: 880px; background: var(--white); border-radius: 14px; overflow: hidden;
+      display: grid; grid-template-columns: 1fr 1.15fr; box-shadow: 0 12px 32px rgba(17, 84, 55, 0.12); border: 1px solid var(--border);
+    }
+
+    .banner-panel {
+      background: linear-gradient(155deg, var(--chmsu-green) 0%, var(--chmsu-green-dark) 100%);
+      color: var(--white); padding: 40px 32px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .pill-tag {
+      display: inline-block; background: rgba(255, 255, 255, 0.14); color: var(--chmsu-gold);
+      font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 20px; margin-bottom: 16px; width: fit-content;
+    }
+    .banner-panel h2 { margin: 0 0 12px; font-size: 28px; line-height: 1.2; }
+    .banner-panel h2 span { color: var(--chmsu-gold); font-style: italic; }
+    .banner-panel p { margin: 0; font-size: 14px; line-height: 1.6; color: #dcebe4; }
+    .banner-footer { border-top: 1px solid rgba(255, 255, 255, 0.18); padding-top: 16px; margin-top: 24px; }
+    .banner-footer p { font-size: 13px; font-weight: 600; color: var(--chmsu-gold); }
+
+    .form-panel { padding: 36px 40px; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; background: var(--bg-light); padding: 5px; border-radius: 8px; margin-bottom: 24px; border: 1px solid var(--border); }
+    .tab-btn { border: none; background: transparent; padding: 10px; border-radius: 6px; font-weight: 600; font-size: 14px; color: var(--text-muted); cursor: pointer; }
+    .tab-btn.active { background: var(--chmsu-green); color: var(--white); }
+
+    label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    input { width: 100%; padding: 11px 14px; margin-bottom: 16px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; background: var(--bg-light); }
+    input:focus { outline: none; border-color: var(--chmsu-green); background: var(--white); }
+
+    .submit-btn { width: 100%; padding: 12px; border: none; border-radius: 8px; background: var(--chmsu-green); color: var(--white); font-size: 15px; font-weight: 700; cursor: pointer; }
+    .submit-btn:hover { background: var(--chmsu-green-light); }
+    .alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; background: #fdecec; border: 1px solid #f5bcbc; color: var(--danger); }
+    .demo-box { margin-top: 20px; padding: 12px 14px; background: var(--bg-light); border-left: 4px solid var(--chmsu-gold); border-radius: 6px; font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+    .hidden { display: none; }
+    @media (max-width: 740px) { .login-container { grid-template-columns: 1fr; } }
+  </style>
+</head>
+
+  <body>
+  <header class="top-bar">
+    <div class="seal-badge">CHMSU<br>1949</div>
+    <div class="brand-title">
+      <h1>Carlos Hilado Memorial State University</h1>
+      <p>Online School Store</p>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="login-container">
+      <div class="banner-panel">
+        <div>
+          <span class="pill-tag">Official CHMSU Portal</span>
+          <h2>Official CHMSU <span>ONLINE SHOP</span></h2>
+          <p>
+            One unified portal for both <strong>Students</strong> and <strong>Faculty</strong>.
+            Order official CHMSU logo patches, lanyards, prescribed uniforms, and NSTP shirts from home.
+          </p>
+        </div>
+        <div class="banner-footer">
+          <p>One CHMSU, One Community — Proud to be a CHMSUan!</p>
+        </div>
+      </div>
+
+      <div class="form-panel">
+        <div class="tabs">
+          <button type="button" id="loginTab" class="tab-btn active" onclick="switchMode('login')">Sign In</button>
+          <button type="button" id="registerTab" class="tab-btn" onclick="switchMode('register')">Create Account</button>
+        </div>
+
+        <div id="alertBox" class="alert hidden"></div>
+
+        <form onsubmit="handleAuthSubmit(event)">
+          <div id="nameGroup" class="hidden">
+            <label for="fullName">Full Name (Student or Faculty)</label>
+            <input type="text" id="fullName" placeholder="e.g., Mark Justin T. Senadre" />
+          </div>
+
+          <div id="idGroup" class="hidden">
+            <label for="schoolId">Student / Faculty ID Number</label>
+            <input type="text" id="schoolId" placeholder="e.g., 2024-00123" />
+          </div>
+
+          <label for="email">CHMSU Email or ID</label>
+          <input type="text" id="email" required placeholder="student@chmsu.edu.ph or faculty@chmsu.edu.ph" />
+
+          <label for="password">Password</label>
+          <input type="password" id="password" required placeholder="••••••••" />
+
+          <button type="submit" id="submitBtn" class="submit-btn">Sign In to Online Shop →</button>
+        </form>
+
+        <div class="demo-box">
+          <strong>Unified Student & Faculty Demo Accounts:</strong><br />
+          • Student: <code>student@chmsu.edu.ph</code> / <code>1234</code><br />
+          • Faculty: <code>faculty@chmsu.edu.ph</code> / <code>1234</code>
+        </div>
+      </div>
+    </div>
+  </main>
+
+      <script>
+    if (localStorage.getItem('activeStoreUser')) {
+      window.location.href = 'store.html';
+    }
+
+    if (!localStorage.getItem('storeUsers')) {
+      localStorage.setItem('storeUsers', JSON.stringify([
+        { name: 'Mark Justin T. Senadre', schoolId: '2024-1001', email: 'student@chmsu.edu.ph', pass: '1234', role: 'user' },
+        { name: 'Prof. Elena Cruz', schoolId: 'FAC-204', email: 'faculty@chmsu.edu.ph', pass: '1234', role: 'user' }
+      ]));
+    }
+
+    let mode = 'login';
+
+    function switchMode(newMode) {
+      mode = newMode;
+      document.getElementById('loginTab').classList.toggle('active', mode === 'login');
+      document.getElementById('registerTab').classList.toggle('active', mode === 'register');
+      document.getElementById('nameGroup').classList.toggle('hidden', mode === 'login');
+      document.getElementById('idGroup').classList.toggle('hidden', mode === 'login');
+      document.getElementById('submitBtn').textContent = mode === 'login' ? 'Sign In to Online Shop →' : 'Register & Enter Shop →';
+      showAlert(null);
+    }
+
+    function showAlert(msg) {
+      const box = document.getElementById('alertBox');
+      if (!msg) { box.classList.add('hidden'); return; }
+      box.textContent = msg;
+      box.classList.remove('hidden');
+    }
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('email').value.trim().toLowerCase();
+      const pass = document.getElementById('password').value;
+      const users = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+
+      if (mode === 'register') {
+        const name = document.getElementById('fullName').value.trim();
+        const schoolId = document.getElementById('schoolId').value.trim();
+
+        if (!name || !schoolId) return showAlert('Please enter your Full Name and Student/Faculty ID.');
+        if (users.some(u => u.email === emailInput || u.schoolId === schoolId)) {
+          return showAlert('Account already exists. Please sign in instead.');
+        }
+
+        const newUser = { name, schoolId, email: emailInput, pass, role: 'user' };
+        users.push(newUser);
+        localStorage.setItem('storeUsers', JSON.stringify(users));
+        localStorage.setItem('activeStoreUser', JSON.stringify(newUser));
+        window.location.href = 'store.html';
+      } else {
+        const user = users.find(
+          u => (u.email === emailInput || u.schoolId.toLowerCase() === emailInput) && u.pass === pass
+        );
+        if (!user) return showAlert('Invalid credentials. Use student@chmsu.edu.ph or faculty@chmsu.edu.ph (pass: 1234).');
+
+        localStorage.setItem('activeStoreUser', JSON.stringify(user));
+        window.location.href = 'store.html';
+      }
+    }
+  </script>
+</body>
+</html>
