@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHMSU Online School Store</title>
+  <style>
+    :root {
+      --chmsu-green: #115437;
+      --chmsu-green-dark: #0b3b26;
+      --chmsu-green-light: #1a6d48;
+      --chmsu-gold: #f4c430;
+      --admin-purple: #463a82;
+      --bg-light: #f3f6f4;
+      --white: #ffffff;
+      --text-dark: #1b2621;
+      --text-muted: #5c6b64;
+      --border: #dce4e0;
+      --danger: #c93b3b;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg-light); color: var(--text-dark); }
+    .hidden { display: none !important; }
+
+    /* Top Header */
+    .top-bar {
+      background: var(--chmsu-green); color: var(--white); padding: 12px 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .seal {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--white);
+      border: 2px solid var(--chmsu-gold); color: var(--chmsu-green);
+      font-weight: 800; font-size: 10px; display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .search-box input {
+      padding: 8px 16px; border-radius: 20px; border: none; width: 260px; font-size: 13px;
+    }
+    .user-area { display: flex; align-items: center; gap: 12px; font-size: 14px; }
+
+    /* Main 3-Column Layout (Sidebar | Content | Cart) */
+    .layout { display: grid; grid-template-columns: 200px 1fr 300px; min-height: calc(100vh - 64px); }
+    .sidebar { background: var(--chmsu-green-dark); color: var(--white); padding: 20px 12px; display: flex; flex-direction: column; justify-content: space-between; }
+    .nav-btn {
+      width: 100%; text-align: left; background: transparent; border: none; color: #d4e8de;
+      padding: 11px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 6px;
+    }
+    .nav-btn.active, .nav-btn:hover { background: var(--chmsu-green-light); color: var(--white); }
+
+    .main-content { padding: 20px 24px; }
+    .cart-panel { background: var(--white); border-left: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+
+        /* Flowchart Progress Bar */
+    .flow-bar {
+      display: flex; flex-wrap: wrap; gap: 6px; background: var(--white);
+      padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 16px;
+    }
+    .step-pill { font-size: 12px; padding: 5px 10px; border-radius: 20px; background: var(--bg-light); color: var(--text-muted); }
+    .step-pill.done { background: #dff2e9; color: var(--chmsu-green); font-weight: 600; }
+    .step-pill.active-user { background: var(--chmsu-green); color: var(--white); font-weight: 700; }
+    .step-pill.active-admin { background: var(--admin-purple); color: var(--white); font-weight: 700; }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(120deg, var(--chmsu-green) 0%, var(--chmsu-green-dark) 100%);
+      color: var(--white); border-radius: 12px; padding: 24px 28px; margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .hero h2 { margin: 0 0 6px; font-size: 24px; }
+    .hero span { color: var(--chmsu-gold); }
+    .gold-btn { background: var(--chmsu-gold); color: var(--chmsu-green-dark); border: none; padding: 9px 16px; border-radius: 20px; font-weight: 700; cursor: pointer; }
+
+    /* Product Grid */
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; }
+    .product-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .product-icon {
+      height: 90px; background: var(--bg-light); border-radius: 8px; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 32px;
+    }
+    .btn {
+      background: var(--chmsu-green); color: var(--white); border: none; padding: 9px 14px;
+      border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%;
+    }
+    .btn:hover { background: var(--chmsu-green-light); }
+    .btn-admin { background: var(--admin-purple); }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-dark); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+
+    /* Cart & Tables */
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .qty-btn { padding: 2px 8px; border: 1px solid var(--border); background: var(--bg-light); cursor: pointer; border-radius: 4px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 16px; }
+    .alert { padding: 12px; border-radius: 8px; background: #fdecec; border: 1px solid #f5bcbc; color: var(--danger); margin-bottom: 16px; font-size: 13px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid var(--border); }
+
+    @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .sidebar { flex-direction: row; flex-wrap: wrap; } }
+  </style>
+</head>
+
+  <body>
+  <header class="top-bar">
+    <div class="brand">
+      <div class="seal">CHMSU<br>1949</div>
+      <div>
+        <strong style="font-size:14px; display:block;">CARLOS HILADO MEMORIAL STATE UNIVERSITY</strong>
+        <small style="color:#d4e8de;">Online School Store</small>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for school items..." oninput="renderCatalog()" />
+    </div>
+    <div class="user-area">
+      <span id="userGreeting">Welcome!</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <button class="nav-btn active" onclick="showTab('shop')">🏠 Home & Shop</button>
+        <button class="nav-btn" onclick="showTab('orders')">📋 My Orders & Reports</button>
+      </div>
+      <button class="nav-btn" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <!-- Center Content -->
+    <main class="main-content">
+      <div class="flow-bar" id="flowBar"></div>
+      <div id="alertBox" class="alert hidden"></div>
+
+      <!-- Shop View -->
+      <div id="shopView">
+        <div class="hero">
+          <div>
+            <h2>Official CHMSU <span>ONLINE SHOP</span></h2>
+            <p style="margin:0 0 12px; font-size:13px; color:#d4e8de;">Get your official CHMSU items from the comfort of your home.</p>
+            <button class="gold-btn" onclick="simulateLowStock()">Test Out-of-Stock Flow</button>
+          </div>
+          <div style="text-align:right; font-size:13px; color:var(--chmsu-gold); font-weight:700;">
+            One CHMSU,<br>One Community
+          </div>
+        </div>
+
+        <h3 style="margin:0 0 12px;">Featured Products</h3>
+        <div class="product-grid" id="catalogGrid"></div>
+      </div>
+
+      <!-- Active Order Fulfillment Pipeline (Confirm -> Admin Prepare -> Claim & Pay) -->
+      <div id="pipelineCard" class="card hidden"></div>
+
+      <!-- Sales & Inventory Reports View -->
+      <div id="reportsCard" class="card" style="margin-top:20px;">
+        <h3 style="margin-top:0;">Record Sale & Reports (Inventory Auto-Updated)</h3>
+        <table>
+          <thead>
+            <tr><th>Order ID</th><th>Student / Faculty</th><th>Items</th><th>Total</th><th>Status</th></tr>
+          </thead>
+          <tbody id="salesTableBody">
+            <tr><td colspan="5" style="color:var(--text-muted);">No completed orders yet.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+
+    <!-- Right Cart Sidebar -->
+    <aside class="cart-panel">
+      <div>
+        <h3 style="margin:0 0 12px; border-bottom:1px solid var(--border); padding-bottom:10px;">🛒 My Cart</h3>
+        <div id="cartList"><p style="color:var(--text-muted); font-size:13px;">Your cart is empty.</p></div>
+      </div>
+
+      <div style="border-top:1px solid var(--border); padding-top:14px;">
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+          <span>Subtotal</span><span id="subtotalText">₱ 0.00</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; margin-bottom:14px;">
+          <span>Total</span><span id="totalText" style="color:var(--chmsu-green);">₱ 0.00</span>
+        </div>
+        <button class="btn" onclick="submitOrderOnline()">Submit Order Online →</button>
+      </div>
+    </aside>
+  </div>
+
+      <script>
+    // 1. Check Login Session from login.html
+    const sessionRaw = localStorage.getItem('activeStoreUser');
+    if (!sessionRaw) window.location.href = 'login.html';
+    const currentUser = JSON.parse(sessionRaw);
+    document.getElementById('userGreeting').innerHTML = `👤 <strong>${currentUser.name}</strong>`;
+
+    function logout() {
+      localStorage.removeItem('activeStoreUser');
+      window.location.href = 'login.html';
+    }
+
+    // 2. Flowchart State & CHMSU Products
+    const STEPS = [
+      { id: 'auth', label: '✓ Logged In', done: true },
+      { id: 'catalog', label: 'Browse & Cart', role: 'user' },
+      { id: 'confirm', label: 'Confirm Order', role: 'user' },
+      { id: 'prepare', label: 'Prepare Order (Admin)', role: 'admin' },
+      { id: 'claim', label: 'Claim & Pay', role: 'user' },
+      { id: 'report', label: 'Record Sale & End', role: 'user' }
+    ];
+
+    let currentStep = 'catalog';
+    let cart = [];
+    let activeOrder = null;
+    let completedSales = [];
+
+    let products = [
+      { id: 1, name: 'CHMSU Logo Patch', price: 50, stock: 10, icon: '🛡️' },
+      { id: 2, name: 'CHMSU Lanyard', price: 80, stock: 6, icon: '🪪' },
+      { id: 3, name: 'Prescribed Uniform (Male)', price: 450, stock: 3, icon: '👔' },
+      { id: 4, name: 'Prescribed Uniform (Female)', price: 550, stock: 3, icon: '👚' },
+      { id: 5, name: 'NSTP Shirt', price: 250, stock: 2, icon: '👕' }
+    ];
+
+    function showAlert(msg) {
+      const box = document.getElementById('alertBox');
+      if (!msg) return box.classList.add('hidden');
+      box.textContent = msg;
+      box.classList.remove('hidden');
+    }
+
+    function renderFlowBar() {
+      document.getElementById('flowBar').innerHTML = STEPS.map(s => {
+        let cls = 'step-pill' + (s.done ? ' done' : '');
+        if (s.id === currentStep) cls += s.role === 'admin' ? ' active-admin' : ' active-user';
+        return `<span class="${cls}">${s.label}</span>`;
+      }).join('');
+    }
+
+    function renderCatalog() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(query));
+      document.getElementById('catalogGrid').innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <div>
+            <div class="product-icon">${p.icon}</div>
+            <strong style="font-size:14px;">${p.name}</strong>
+            <p style="margin:4px 0; color:var(--chmsu-green); font-weight:700;">₱ ${p.price.toFixed(2)}</p>
+            <p style="margin:0 0 10px; font-size:12px; color:${p.stock > 0 ? '#1a6d48' : '#c93b3b'};">Stock: ${p.stock} left</p>
+          </div>
+          <button class="btn" onclick="addToCart(${p.id})" ${p.stock === 0 ? 'disabled style="opacity:0.4;"' : ''}>🛒 Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id) {
+      showAlert(null);
+      const item = cart.find(i => i.id === id);
+      item ? item.qty++ : cart.push({ id, qty: 1 });
+      renderCart();
+    }
+
+    function updateQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (!item) return;
+      item.qty += delta;
+      if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+      renderCart();
+    }
+
+    function renderCart() {
+      const list = document.getElementById('cartList');
+      if (!cart.length) {
+        list.innerHTML = '<p style="color:var(--text-muted); font-size:13px;">Your cart is empty.</p>';
+        document.getElementById('subtotalText').textContent = '₱ 0.00';
+        document.getElementById('totalText').textContent = '₱ 0.00';
+        return;
+      }
+      let total = 0;
+      list.innerHTML = cart.map(item => {
+        const p = products.find(prod => prod.id === item.id);
+        total += p.price * item.qty;
+        return `<div class="cart-item">
+          <div><strong>${p.name}</strong><br><small>₱ ${p.price.toFixed(2)}</small></div>
+          <div>
+            <button class="qty-btn" onclick="updateQty(${p.id}, -1)">-</button>
+            <span style="margin:0 6px;">${item.qty}</span>
+            <button class="qty-btn" onclick="updateQty(${p.id}, 1)">+</button>
+          </div>
+        </div>`;
+      }).join('');
+      document.getElementById('subtotalText').textContent = `₱ ${total.toFixed(2)}`;
+      document.getElementById('totalText').textContent = `₱ ${total.toFixed(2)}`;
+    }
+
+    function simulateLowStock() {
+      products.forEach(p => { if (p.stock > 0) p.stock--; });
+      renderCatalog();
+      showAlert('Inventory dropped! Try submitting an order exceeding available stock to test the "Out of stock → Back to catalog" loop.');
+    }
+
+    // 3. Submit Order -> Stock Check -> Confirm -> Admin Prepare -> Claim & Pay
+    function submitOrderOnline() {
+      if (!cart.length) return showAlert('Your cart is empty. Add CHMSU items first.');
+
+      const outOfStock = cart.filter(item => {
+        const p = products.find(prod => prod.id === item.id);
+        return !p || p.stock < item.qty;
+      });
+
+      if (outOfStock.length) {
+        const names = outOfStock.map(i => products.find(p => p.id === i.id).name).join(', ');
+        showAlert(`Out of stock for: ${names}. Returning back to catalog.`);
+        currentStep = 'catalog';
+        return renderFlowBar();
+      }
+
+      showAlert(null);
+      let total = 0;
+      const summary = cart.map(item => {
+        const p = products.find(prod => prod.id === item.id);
+        p.stock -= item.qty;
+        total += p.price * item.qty;
+        return `${item.qty}x ${p.name}`;
+      });
+
+      activeOrder = { id: 'CHMSU-' + Math.floor(1000 + Math.random() * 9000), customer: currentUser.name, items: summary.join(', '), total, status: 'Confirmed' };
+      cart = [];
+      renderCatalog(); renderCart();
+
+      document.getElementById('shopView').classList.add('hidden');
+      document.getElementById('pipelineCard').classList.remove('hidden');
+      currentStep = 'prepare';
+      renderFlowBar(); renderPipeline();
+    }
+
+    function renderPipeline() {
+      const card = document.getElementById('pipelineCard');
+      if (currentStep === 'prepare') {
+        card.innerHTML = `<span style="background:var(--admin-purple); color:#fff; padding:4px 10px; border-radius:6px; font-size:12px;">Store Admin Step</span>
+          <h3>Prepare Order: ${activeOrder.id}</h3>
+          <p><strong>Customer:</strong> ${activeOrder.customer}</p>
+          <p><strong>Items:</strong> ${activeOrder.items}</p>
+          <button class="btn btn-admin" style="width:auto;" onclick="markReady()">Mark Ready for Pickup</button>`;
+      } else if (currentStep === 'claim') {
+        card.innerHTML = `<span style="background:var(--chmsu-green); color:#fff; padding:4px 10px; border-radius:6px; font-size:12px;">Student / Faculty Pickup</span>
+          <h3>Ready for Pickup: ${activeOrder.id}</h3>
+          <p><strong>Items:</strong> ${activeOrder.items}</p>
+          <p><strong>Amount to Pay:</strong> ₱ ${activeOrder.total.toFixed(2)}</p>
+          <button class="btn" style="width:auto;" onclick="claimAndPay()">Claim and Pay (₱ ${activeOrder.total.toFixed(2)})</button>`;
+      } else if (currentStep === 'report') {
+        card.innerHTML = `<h3>✅ Order ${activeOrder.id} Completed!</h3>
+          <p style="color:var(--text-muted);">Sale recorded and CHMSU store inventory has been auto-updated.</p>
+          <button class="btn" style="width:auto;" onclick="backToShop()">Back to Catalog</button>`;
+      }
+    }
+
+    function markReady() { activeOrder.status = 'Ready for Pickup'; currentStep = 'claim'; renderFlowBar(); renderPipeline(); }
+
+    function claimAndPay() {
+      activeOrder.status = 'Completed';
+      completedSales.unshift({ ...activeOrder });
+      currentStep = 'report';
+      renderFlowBar(); renderPipeline();
+      document.getElementById('salesTableBody').innerHTML = completedSales.map(s => `
+        <tr><td><strong>${s.id}</strong></td><td>${s.customer}</td><td>${s.items}</td><td>₱ ${s.total.toFixed(2)}</td>
+        <td><span style="color:var(--chmsu-green); font-weight:700;">${s.status}</span></td></tr>`).join('');
+    }
+
+    function backToShop() {
+      activeOrder = null; currentStep = 'catalog'; renderFlowBar();
+      document.getElementById('pipelineCard').classList.add('hidden');
+      document.getElementById('shopView').classList.remove('hidden');
+    }
+
+    function showTab(tab) {
+      if (tab === 'shop' && !activeOrder) backToShop();
+    }
+
+    renderFlowBar();
+    renderCatalog();
+  </script>
+</body>
+</html>
