@@ -87,8 +87,8 @@
           <span class="pill-tag">Official CHMSU Portal</span>
           <h2>Official CHMSU <span>ONLINE SHOP</span></h2>
           <p>
-            One unified portal for both <strong>Students</strong> and <strong>Faculty</strong>.
-            Order official CHMSU logo patches, lanyards, prescribed uniforms, and NSTP shirts from home.
+            One unified login for <strong>Students</strong>, <strong>Faculty</strong>, and <strong>Store Admins</strong>.
+            Sign in with your CHMSU credentials to access the online shop or store management portal.
           </p>
         </div>
         <div class="banner-footer">
@@ -116,33 +116,52 @@
           </div>
 
           <label for="email">CHMSU Email or ID</label>
-          <input type="text" id="email" required placeholder="student@chmsu.edu.ph or faculty@chmsu.edu.ph" />
+          <input type="text" id="email" required placeholder="Enter CHMSU email or ID" />
 
           <label for="password">Password</label>
           <input type="password" id="password" required placeholder="••••••••" />
 
-          <button type="submit" id="submitBtn" class="submit-btn">Sign In to Online Shop →</button>
+          <button type="submit" id="submitBtn" class="submit-btn">Sign In →</button>
         </form>
 
         <div class="demo-box">
-          <strong>Unified Student & Faculty Demo Accounts:</strong><br />
-          • Student: <code>student@chmsu.edu.ph</code> / <code>1234</code><br />
-          • Faculty: <code>faculty@chmsu.edu.ph</code> / <code>1234</code>
+          <strong>Test Credentials (Role-Based Redirect):</strong><br />
+          • Student: <code>student@chmsu.edu.ph</code> / <code>1234</code> → <em>Store</em><br />
+          • Faculty: <code>faculty@chmsu.edu.ph</code> / <code>1234</code> → <em>Store</em><br />
+          • Store Admin: <code>admin@chmsu.edu.ph</code> / <code>admin123</code> → <em>Admin Page</em>
         </div>
       </div>
     </div>
   </main>
 
       <script>
-    if (localStorage.getItem('activeStoreUser')) {
-      window.location.href = 'store.html';
+    // Helper: Route to admin.html if role is 'admin', otherwise store.html
+    function redirectByRole(user) {
+      if (user.role === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'store.html';
+      }
     }
 
-    if (!localStorage.getItem('storeUsers')) {
-      localStorage.setItem('storeUsers', JSON.stringify([
-        { name: 'Mark Justin T. Senadre', schoolId: '2024-1001', email: 'student@chmsu.edu.ph', pass: '1234', role: 'user' },
-        { name: 'Prof. Elena Cruz', schoolId: 'FAC-204', email: 'faculty@chmsu.edu.ph', pass: '1234', role: 'user' }
-      ]));
+    // Check if already logged in
+    const existingSession = localStorage.getItem('activeStoreUser');
+    if (existingSession) {
+      redirectByRole(JSON.parse(existingSession));
+    }
+
+    // Seed default Student, Faculty & Store Admin accounts
+    const DEFAULT_USERS = [
+      { name: 'Mark Justin T. Senadre', schoolId: '2024-1001', email: 'student@chmsu.edu.ph', pass: '1234', role: 'user' },
+      { name: 'Prof. Elena Cruz', schoolId: 'FAC-204', email: 'faculty@chmsu.edu.ph', pass: '1234', role: 'user' },
+      { name: 'CHMSU Store Admin', schoolId: 'ADMIN-01', email: 'admin@chmsu.edu.ph', pass: 'admin123', role: 'admin' }
+    ];
+
+    // Ensure admin account is always present even if storeUsers was already saved earlier
+    let savedUsers = JSON.parse(localStorage.getItem('storeUsers') || '[]');
+    if (!savedUsers.some(u => u.email === 'admin@chmsu.edu.ph')) {
+      savedUsers = [...DEFAULT_USERS];
+      localStorage.setItem('storeUsers', JSON.stringify(savedUsers));
     }
 
     let mode = 'login';
@@ -153,7 +172,7 @@
       document.getElementById('registerTab').classList.toggle('active', mode === 'register');
       document.getElementById('nameGroup').classList.toggle('hidden', mode === 'login');
       document.getElementById('idGroup').classList.toggle('hidden', mode === 'login');
-      document.getElementById('submitBtn').textContent = mode === 'login' ? 'Sign In to Online Shop →' : 'Register & Enter Shop →';
+      document.getElementById('submitBtn').textContent = mode === 'login' ? 'Sign In →' : 'Register & Enter Shop →';
       showAlert(null);
     }
 
@@ -175,7 +194,7 @@
         const schoolId = document.getElementById('schoolId').value.trim();
 
         if (!name || !schoolId) return showAlert('Please enter your Full Name and Student/Faculty ID.');
-        if (users.some(u => u.email === emailInput || u.schoolId === schoolId)) {
+        if (users.some(u => u.email === emailInput || u.schoolId.toLowerCase() === schoolId.toLowerCase())) {
           return showAlert('Account already exists. Please sign in instead.');
         }
 
@@ -183,15 +202,15 @@
         users.push(newUser);
         localStorage.setItem('storeUsers', JSON.stringify(users));
         localStorage.setItem('activeStoreUser', JSON.stringify(newUser));
-        window.location.href = 'store.html';
+        redirectByRole(newUser);
       } else {
         const user = users.find(
           u => (u.email === emailInput || u.schoolId.toLowerCase() === emailInput) && u.pass === pass
         );
-        if (!user) return showAlert('Invalid credentials. Use student@chmsu.edu.ph or faculty@chmsu.edu.ph (pass: 1234).');
+        if (!user) return showAlert('Invalid email/ID or password.');
 
         localStorage.setItem('activeStoreUser', JSON.stringify(user));
-        window.location.href = 'store.html';
+        redirectByRole(user);
       }
     }
   </script>
