@@ -1,4 +1,184 @@
-  <script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CHMSU Online School Store</title>
+  <style>
+    :root {
+      --chmsu-green: #115437;
+      --chmsu-green-dark: #0b3b26;
+      --chmsu-green-light: #1a6d48;
+      --chmsu-gold: #f4c430;
+      --bg-light: #f3f6f4;
+      --white: #ffffff;
+      --text-dark: #1b2621;
+      --text-muted: #5c6b64;
+      --border: #dce4e0;
+      --danger: #c93b3b;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg-light); color: var(--text-dark); }
+    .hidden { display: none !important; }
+
+    /* Top Header */
+    .top-bar {
+      background: var(--chmsu-green); color: var(--white); padding: 12px 24px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .seal {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--white);
+      border: 2px solid var(--chmsu-gold); color: var(--chmsu-green);
+      font-weight: 800; font-size: 10px; display: flex; align-items: center; justify-content: center; text-align: center;
+    }
+    .search-box input { padding: 8px 16px; border-radius: 20px; border: none; width: 260px; font-size: 13px; }
+    .user-area { font-size: 14px; }
+
+    /* 3-Column Store Layout */
+    .layout { display: grid; grid-template-columns: 200px 1fr 300px; min-height: calc(100vh - 64px); }
+    .sidebar { background: var(--chmsu-green-dark); color: var(--white); padding: 20px 12px; display: flex; flex-direction: column; justify-content: space-between; }
+    .nav-btn {
+      width: 100%; text-align: left; background: transparent; border: none; color: #d4e8de;
+      padding: 11px 14px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; margin-bottom: 6px;
+    }
+    .nav-btn.active, .nav-btn:hover { background: var(--chmsu-green-light); color: var(--white); }
+
+    .main-content { padding: 20px 24px; }
+    .cart-panel { background: var(--white); border-left: 1px solid var(--border); padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(120deg, var(--chmsu-green) 0%, var(--chmsu-green-dark) 100%);
+      color: var(--white); border-radius: 12px; padding: 22px 26px; margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .hero h2 { margin: 0 0 6px; font-size: 22px; }
+    .hero span { color: var(--chmsu-gold); }
+
+    /* Product Cards & Size Dropdown */
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .product-card {
+      background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+      padding: 14px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .product-icon {
+      height: 80px; background: var(--bg-light); border-radius: 8px; margin-bottom: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 32px;
+    }
+    select {
+      width: 100%; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg-light); font-size: 13px; margin-bottom: 10px;
+    }
+
+    /* Buttons, Badges & Alerts */
+    .btn {
+      background: var(--chmsu-green); color: var(--white); border: none; padding: 9px 14px;
+      border-radius: 6px; font-weight: 600; cursor: pointer; width: 100%; font-size: 13px;
+    }
+    .btn:hover { background: var(--chmsu-green-light); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; width: auto; }
+    .badge { padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+    .badge-green { background: #dff2e9; color: var(--chmsu-green); }
+    .badge-gold { background: #fef5d6; color: #8c6900; }
+
+    .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+    .qty-btn { padding: 2px 8px; border: 1px solid var(--border); background: var(--bg-light); cursor: pointer; border-radius: 4px; }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 18px; }
+    .alert { padding: 12px; border-radius: 8px; background: #fdecec; border: 1px solid #f5bcbc; color: var(--danger); margin-bottom: 16px; font-size: 13px; }
+    .success-alert { background: #dff2e9; border-color: #a3d9c0; color: var(--chmsu-green-dark); }
+
+    @media (max-width: 960px) { .layout { grid-template-columns: 1fr; } .sidebar { flex-direction: row; flex-wrap: wrap; } }
+  </style>
+</head>
+
+
+  <body>
+  <header class="top-bar">
+    <div class="brand">
+      <div class="seal">CHMSU<br>1949</div>
+      <div>
+        <strong style="font-size:14px; display:block;">CARLOS HILADO MEMORIAL STATE UNIVERSITY</strong>
+        <small style="color:#d4e8de;">Online School Store</small>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search for school items..." oninput="renderCatalog()" />
+    </div>
+    <div class="user-area">
+      <span id="userGreeting">Welcome!</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar">
+      <div>
+        <button id="nav-shop" class="nav-btn active" onclick="switchTab('shop')">🏠 Shop Catalog</button>
+        <button id="nav-orders" class="nav-btn" onclick="switchTab('orders')">📋 My Orders</button>
+      </div>
+      <button class="nav-btn" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <!-- Center Content -->
+    <main class="main-content">
+      <div id="alertBox" class="alert hidden"></div>
+
+      <!-- TAB 1: PRODUCT CATALOG -->
+      <section id="tab-shop">
+        <div class="hero">
+          <div>
+            <h2>Official CHMSU <span>ONLINE SHOP</span></h2>
+            <p style="margin:0; font-size:13px; color:#d4e8de;">Get your official CHMSU items from the comfort of your home.</p>
+          </div>
+          <div style="text-align:right; font-size:13px; color:var(--chmsu-gold); font-weight:700;">
+            One CHMSU,<br>One Community
+          </div>
+        </div>
+
+        <h3 style="margin:0 0 12px;">Featured Products</h3>
+        <div class="product-grid" id="catalogGrid"></div>
+      </section>
+
+      <!-- TAB 2: MY ORDERS (CLAIM & PAY) -->
+      <section id="tab-orders" class="hidden">
+        <div class="card">
+          <h3 style="margin-top:0;">My Submitted Orders</h3>
+          <p style="font-size:13px; color:var(--text-muted);">View your order summary and click <strong>Claim and Pay</strong> when picking up your items on campus.</p>
+          <div id="ordersList"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Cart Sidebar -->
+    <aside class="cart-panel">
+      <div>
+        <h3 style="margin:0 0 12px; border-bottom:1px solid var(--border); padding-bottom:10px;">🛒 My Cart</h3>
+        <div id="cartList"><p style="color:var(--text-muted); font-size:13px;">Your cart is empty.</p></div>
+      </div>
+
+      <div style="border-top:1px solid var(--border); padding-top:14px;">
+        <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+          <span>Subtotal</span><span id="subtotalText">₱ 0.00</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:16px; font-weight:700; margin-bottom:14px;">
+          <span>Total</span><span id="totalText" style="color:var(--chmsu-green);">₱ 0.00</span>
+        </div>
+        <button class="btn" onclick="submitOrder()">Submit Order Online →</button>
+      </div>
+    </aside>
+  </div>
+
+
+
+
+
+
+
+
+<script>
     // 1. Check Login Session from login.html
     const sessionRaw = localStorage.getItem('activeStoreUser');
     if (!sessionRaw) window.location.href = 'login.html';
